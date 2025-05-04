@@ -3,6 +3,7 @@
 import arxiv
 import json
 import asyncio
+import re
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
@@ -15,8 +16,20 @@ import logging
 logger = logging.getLogger("arxiv-mcp-server")
 settings = Settings()
 
+# Paper ID validation pattern
+ARXIV_ID_PATTERN = re.compile(r'^\d{4}\.\d{4,5}(v\d+)?$|^[a-z-]+/\d{7}$')
+
 # Global dictionary to track conversion status
 conversion_statuses: Dict[str, Any] = {}
+MAX_STATUS_ENTRIES = 100
+
+
+def _cleanup_old_statuses() -> None:
+    """Remove oldest status entries when limit exceeded."""
+    if len(conversion_statuses) > MAX_STATUS_ENTRIES:
+        oldest = sorted(conversion_statuses.items(), key=lambda x: x[1].started_at)[:50]
+        for k, _ in oldest:
+            del conversion_statuses[k]
 
 
 @dataclass
@@ -75,6 +88,7 @@ def convert_pdf_to_markdown(paper_id: str, pdf_path: Path) -> None:
 
         # Clean up PDF after successful conversion
         logger.info(f"Conversion completed for {paper_id}")
+        pdf_path.unlink(missing_ok=True)
 
     except Exception as e:
         logger.error(f"Conversion failed for {paper_id}: {str(e)}")
@@ -90,6 +104,21 @@ async def handle_download(arguments: Dict[str, Any]) -> List[types.TextContent]:
     try:
         paper_id = arguments["paper_id"]
         check_status = arguments.get("check_status", False)
+
+        # Validate paper ID format
+        if not ARXIV_ID_PATTERN.match(paper_id):
+            return [
+                types.TextContent(
+                    type="text",
+                    text=json.dumps({
+                        "status": "error",
+                        "message": f"Invalid paper ID format: {paper_id}. Expected format: YYMM.NNNNN or archive/NNNNNNN"
+                    }),
+                )
+            ]
+
+        # Cleanup old statuses to prevent memory leak
+        _cleanup_old_statuses()
 
         # If only checking status
         if check_status:

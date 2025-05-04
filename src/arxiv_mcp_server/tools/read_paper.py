@@ -1,10 +1,10 @@
 """Read functionality for the arXiv MCP server."""
 
 import json
-from pathlib import Path
 from typing import Dict, Any, List
 import mcp.types as types
 from ..config import Settings
+from .list_papers import list_papers
 
 settings = Settings()
 
@@ -24,13 +24,9 @@ read_tool = types.Tool(
 )
 
 
-def list_papers() -> list[str]:
-    """List all stored paper IDs."""
-    return [p.stem for p in Path(settings.STORAGE_PATH).glob("*.md")]
-
-
 async def handle_read_paper(arguments: Dict[str, Any]) -> List[types.TextContent]:
     """Handle requests to read a paper's content."""
+    from pathlib import Path
     try:
         paper_ids = list_papers()
         paper_id = arguments["paper_id"]

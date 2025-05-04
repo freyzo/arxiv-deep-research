@@ -160,29 +160,6 @@ def _optimize_query(query: str) -> str:
     return query
 
 
-def _build_date_filter(date_from: str = None, date_to: str = None) -> str:
-    """Build arXiv API date filter using submittedDate syntax."""
-    if not date_from and not date_to:
-        return ""
-
-    try:
-        # Parse and format dates for arXiv API (YYYYMMDDTTTT format where TTTT is time to minute)
-        if date_from:
-            start_date = parser.parse(date_from).strftime("%Y%m%d0000")
-        else:
-            start_date = "199107010000"  # arXiv started July 1991
-
-        if date_to:
-            end_date = parser.parse(date_to).strftime("%Y%m%d2359")
-        else:
-            end_date = datetime.now().strftime("%Y%m%d2359")
-
-        return f"submittedDate:[{start_date}+TO+{end_date}]"
-    except (ValueError, TypeError) as e:
-        logger.error(f"Error parsing dates: {e}")
-        raise ValueError(f"Invalid date format. Use YYYY-MM-DD format: {e}")
-
-
 def _process_paper(paper: arxiv.Result) -> Dict[str, Any]:
     """Process paper information with resource URI."""
     return {
