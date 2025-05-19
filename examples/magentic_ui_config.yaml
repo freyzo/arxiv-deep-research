@@ -1,0 +1,55 @@
+# Magentic-UI Configuration — ArXiv MCP Agent Integration
+# ==========================================================
+#
+# Drop this file into your Magentic-UI working directory and run:
+#   magentic-ui --port 8081 --config config.yaml
+#
+# This adds an "arxiv_surfer" agent to the Magentic-UI team.
+# The agent has full access to the arxiv-mcp-server tools:
+#   - search_papers
+#   - download_paper
+#   - read_paper
+#   - list_papers
+#
+# Architecture: Orchestrator delegates literature-search subtasks to
+# arxiv_surfer, which calls the MCP server via stdio transport.
+# This mirrors the Magentic-One pattern: Orchestrator → specialist agents.
+#
+# Reference: https://github.com/microsoft/magentic-ui#mcp-agents
+
+model_client:
+  provider: OpenAIChatCompletionClient
+  config:
+    model: gpt-4o
+
+mcp_agent_configs:
+  - name: arxiv_surfer
+    description: >
+      The arxiv_surfer has direct access to the arXiv academic paper repository.
+      Use this agent for any tasks involving finding, downloading, or analyzing
+      research papers. It can search by topic, filter by date and category,
+      and read full paper content.
+    model_client:
+      provider: OpenAIChatCompletionClient
+      config:
+        model: gpt-4o
+        max_retries: 5
+    system_message: |
+      You are ArxivSurfer, a specialist research agent integrated into Magentic-UI.
+      You have access to the arXiv MCP server tools. When given a research task:
+      1. Use search_papers to find relevant papers (use category filters like cs.AI, cs.MA, cs.LG)
+      2. Use download_paper to fetch papers that look most relevant
+      3. Use read_paper to extract key details from downloaded papers
+      4. Return structured summaries with paper IDs, titles, and key findings
+      Always verify papers exist before reporting on them. Be precise.
+    reflect_on_tool_use: true
+    mcp_servers:
+      - server_name: arxiv
+        server_params:
+          type: StdioServerParams
+          command: python
+          args:
+            - -m
+            - arxiv_mcp_server
+          env:
+            ARXIV_STORAGE_PATH: /tmp/magentic-ui-papers

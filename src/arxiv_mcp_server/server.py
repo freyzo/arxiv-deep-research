@@ -17,11 +17,15 @@ from .tools import handle_search, handle_download, handle_list_papers, handle_re
 from .tools import search_tool, download_tool, list_tool, read_tool
 from .prompts.handlers import list_prompts as handler_list_prompts
 from .prompts.handlers import get_prompt as handler_get_prompt
+from .tracing import setup_tracing, trace_tool
 
 settings = Settings()
 logger = logging.getLogger("arxiv-mcp-server")
 logger.setLevel(logging.INFO)
 server = Server(settings.APP_NAME)
+
+# Initialize OpenTelemetry tracing (no-op if SDK not installed)
+setup_tracing()
 
 
 @server.list_prompts()
