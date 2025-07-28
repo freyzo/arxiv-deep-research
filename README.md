@@ -8,7 +8,7 @@ A **Model Context Protocol (MCP) server** for searching, downloading, and readin
 
 ---
 
-## Integration with Microsoft Magentic-UI
+## Integration with Magentic-UI
 
 Magentic-UI supports custom `McpAgent` instances via `mcp_agent_configs` in its config file. This server plugs in directly:
 
