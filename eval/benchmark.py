@@ -44,7 +44,7 @@ BENCHMARK_QUERIES: list[dict] = [
         "description": "Multi-agent LLM orchestration frameworks",
         "query": "multi-agent LLM orchestration",
         "categories": ["cs.AI", "cs.MA"],
-        "relevant_ids": ["2308.08155", "2403.16971"],  # AutoGen, Magentic-One papers
+        "relevant_ids": ["2308.08155", "2411.04468"],  # AutoGen, Magentic-One papers
         "tags": ["agentic-ai", "orchestration"],
     },
     {

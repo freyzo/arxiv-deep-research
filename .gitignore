@@ -1,6 +1,9 @@
 # Personal / interview docs
 Microsoft_AIFrontiers_Interview_Prep.docx
 
+# Local project docs (not for Git)
+docs/
+
 # Python
 __pycache__/
 *.py[cod]

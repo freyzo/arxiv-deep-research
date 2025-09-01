@@ -20,7 +20,7 @@
 model_client:
   provider: OpenAIChatCompletionClient
   config:
-    model: gpt-4o
+    model: gpt-4.1-2025-04-14
 
 mcp_agent_configs:
   - name: arxiv_surfer
@@ -32,7 +32,7 @@ mcp_agent_configs:
     model_client:
       provider: OpenAIChatCompletionClient
       config:
-        model: gpt-4o
+        model: gpt-4.1-2025-04-14
         max_retries: 5
     system_message: |
       You are ArxivSurfer, a specialist research agent integrated into Magentic-UI.
