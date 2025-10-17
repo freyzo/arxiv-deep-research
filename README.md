@@ -1,9 +1,6 @@
 <p align="center">
-  <img src="docs/demo.gif" alt="AutoGen research team demo — Orchestrator, ArxivSurfer, and Coder running a deep research task" width="800"/>
-</p>
-
-<p align="center">
-  <img src="arxiv.jpg" alt="arXiv Deep Research overview" width="800"/>
+  <img src="public/arxiv.webp" alt="logo" width="80" height="80" />
+  <img src="public/arxiv.jpg" alt="arXiv Deep Research overview" width="400"/>
 </p>
 
 # arXiv Deep Research
