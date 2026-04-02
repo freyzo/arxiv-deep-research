@@ -1,6 +1,5 @@
 <p align="center">
-  <img src="public/arxiv.webp" alt="logo" width="80" height="80" />
-  <img src="public/arxiv.jpg" alt="arXiv Deep Research overview" width="400"/>
+  <img src="public/arxiv.png" alt="arXiv Deep Research overview" width="400"/>
 </p>
 
 # arXiv Deep Research
